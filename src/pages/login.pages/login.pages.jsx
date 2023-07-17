@@ -4,16 +4,17 @@ import { Link } from "react-router-dom";
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
 
 const defaultFormfields = {
-  email: "",
+  identifier: "",
   password: "",
 };
 
 const Login = () => {
   const [formFields, setFormFields] = useState(defaultFormfields);
   const [isLogInSuccessful, setIsLogInSuccessful] = useState(false);
+  const [isLogInFailed, setIsLogInFailed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { email, password } = formFields;
+  const { identifier, password } = formFields;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,9 +24,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(isLogInSuccessful);
-
-    const { email, password } = formFields;
+    const { identifier, password } = formFields;
 
     try {
       fetch("https://voting-api-rhzm.onrender.com/auth/login", {
@@ -33,19 +32,25 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ identifier, password }),
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
+        .then(async (res) => {
+          const info = await res.json()
+          if (res.ok) {
+            const { data } = info;
+            const { token, account } = data;
+            localStorage.setItem("token", token);
+            localStorage.setItem("account", JSON.stringify(account));
+            console.log(account);
+            console.log(token);
             setIsLogInSuccessful(true);
+            setIsLogInFailed(false);
+            setFormFields(defaultFormfields);
+          } else {
+            setIsLogInFailed(true);
+            setIsLogInSuccessful(false);
           }
         })
-        .catch((error) => {
-          console.log(error.message);
-        });
     } catch (error) {
       return;
     }
@@ -59,14 +64,23 @@ const Login = () => {
     <div className="d-grid justify-content-center my-5">
       <h2>I already have an account</h2>
       <span className="mb-3">Login with your email and password</span>
+      {isLogInSuccessful ? (
+        <div className="alert alert-success" role="alert">
+          Login Successful
+        </div>
+      ) : isLogInFailed ? (
+        <div className="alert alert-danger" role="alert">
+          Login Failed
+        </div>
+      ) : null}
       <form className="" onSubmit={handleSubmit}>
         <FormInput
-          name="email"
-          type="email"
-          label="Email"
+          name="identifier"
+          type="text"
+          label="Email/Username"
           required
           onChange={handleChange}
-          value={email}
+          value={identifier}
         />
         <div className="d-flex justify-content-between">
           <FormInput

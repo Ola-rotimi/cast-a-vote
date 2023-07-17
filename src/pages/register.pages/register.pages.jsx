@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
 
@@ -22,6 +22,7 @@ const Register = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   const {
     firstName,
@@ -52,8 +53,6 @@ const Register = () => {
       confirmPassword,
     } = formFields;
 
-    console.log(typeof postCode);
-
     const passwordRegex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
     if (!passwordRegex.test(password)) {
@@ -62,6 +61,8 @@ const Register = () => {
     } else {
       setIsPasswordValid(true);
     }
+    const dateOfBirth = new Date(dob).toISOString().split("T")[0];
+    console.log(dateOfBirth);
 
     if (password !== confirmPassword) {
       setIsPasswordCorrect(false);
@@ -77,7 +78,7 @@ const Register = () => {
             firstName,
             lastName,
             postCode,
-            dob,
+            dateOfBirth,
             email,
             username,
             password,
@@ -85,30 +86,36 @@ const Register = () => {
           }),
         })
           .then((res) => {
-            if (res.status === 200) {
+            if (res.ok) {
               setIsRegisterSuccessful(true);
               setFormFields(defaultFormfields);
               console.log(res);
+              setTimeout(() => {
+                navigate("/login");
+              }, 1000);
             } else {
               setIsRegisterSuccessful(false);
               setIsRegisterFailed(true);
+              console.log(res);
             }
           })
-          .catch((errors) => {
-            console.error(errors.message);
+          .catch((error) => {
+            console.error(error.message);
           });
-      } catch (errors) {
-        console.error(errors.message);
+      } catch (error) {
+        console.error(error.message);
       }
     }
   };
 
   const passwordTest = isPasswordValid ? null : (
-    <p className="text-danger">
-      <span>Password must contain at least 8 characters,</span>
-      <span>1 uppercase letter,</span>
+    <div className="text-danger">
+      <span>
+        Password must contain at least 8 characters,1 uppercase letter,
+      </span>
+
       <p>1 lowercase letter 1 special character and 1 number</p>
-    </p>
+    </div>
   );
 
   const showPasswordHandler = () => {
@@ -125,12 +132,18 @@ const Register = () => {
       <span className="mb-3">Register with your email and password</span>
       {isPasswordCorrect ? (
         isRegisterSuccessful ? (
-          <span className="text-success">Registration Successful</span>
+          <div className="alert alert-success" role="alert">
+            Registration Successful, Redirecting to Login Page
+          </div>
         ) : isRegisterFailed ? (
-          <span className="text-danger">Registration Failed! Try Again!</span>
+          <div className="alert alert-danger" role="alert">
+            Registration Failed! Try Again!
+          </div>
         ) : null
       ) : (
-        <span className="text-danger">Passwords do not match</span>
+        <div className="alert alert-danger" role="alert">
+          Passwords do not match
+        </div>
       )}
       <form className="" onSubmit={handleSubmit}>
         <FormInput
