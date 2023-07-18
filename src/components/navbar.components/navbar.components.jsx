@@ -1,5 +1,11 @@
+import { useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
+
+import { UserContext } from "../../context/user.context";
+
 const Navbar = () => {
+  const { currentUser } = useContext(UserContext);
+
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
@@ -24,7 +30,10 @@ const Navbar = () => {
             aria-labelledby="offcanvasNavbarLabel"
           >
             <div className="offcanvas-header">
-              <h5 className="offcanvas-title text-light" id="offcanvasNavbarLabel">
+              <h5
+                className="offcanvas-title text-light"
+                id="offcanvasNavbarLabel"
+              >
                 Menu
               </h5>
               <button

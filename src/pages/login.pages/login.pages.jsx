@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
+import { UserContext } from "../../context/user.context";
 
 const defaultFormfields = {
   identifier: "",
@@ -13,6 +14,8 @@ const Login = () => {
   const [isLogInSuccessful, setIsLogInSuccessful] = useState(false);
   const [isLogInFailed, setIsLogInFailed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const { identifier, password } = formFields;
 
@@ -33,24 +36,20 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ identifier, password }),
-      })
-        .then(async (res) => {
-          const info = await res.json()
-          if (res.ok) {
-            const { data } = info;
-            const { token, account } = data;
-            localStorage.setItem("token", token);
-            localStorage.setItem("account", JSON.stringify(account));
-            console.log(account);
-            console.log(token);
-            setIsLogInSuccessful(true);
-            setIsLogInFailed(false);
-            setFormFields(defaultFormfields);
-          } else {
-            setIsLogInFailed(true);
-            setIsLogInSuccessful(false);
-          }
-        })
+      }).then(async (res) => {
+        const info = await res.json();
+        if (res.ok) {
+          const { data } = info;
+          const { account } = data;
+          setCurrentUser(account);
+          setIsLogInSuccessful(true);
+          setIsLogInFailed(false);
+          setFormFields(defaultFormfields);
+        } else {
+          setIsLogInFailed(true);
+          setIsLogInSuccessful(false);
+        }
+      });
     } catch (error) {
       return;
     }
