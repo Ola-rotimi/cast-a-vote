@@ -77,6 +77,8 @@ const Login = () => {
           name="identifier"
           type="text"
           label="Email/Username"
+          htmlFor="identifier"
+          id="identifier"
           required
           onChange={handleChange}
           value={identifier}
@@ -86,6 +88,8 @@ const Login = () => {
             name="password"
             type={showPassword ? "text" : "password"}
             label="Password"
+            htmlFor="login-password"
+            id="login-password"
             required
             onChange={handleChange}
             value={password}

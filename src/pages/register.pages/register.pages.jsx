@@ -22,6 +22,7 @@ const Register = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const {
@@ -150,6 +151,8 @@ const Register = () => {
           name="firstName"
           type="text"
           label="First Name*"
+          htmlFor="firstName"
+          id="firstName"
           required
           onChange={handleChange}
           value={firstName}
@@ -159,6 +162,8 @@ const Register = () => {
           name="lastName"
           type="text"
           label="Last Name*"
+          htmlFor="lastName"
+          id="lastName"
           required
           onChange={handleChange}
           value={lastName}
@@ -168,6 +173,8 @@ const Register = () => {
           name="postCode"
           type="text"
           label="Post Code"
+          htmlFor="postCode"
+          id="postCode"
           onChange={handleChange}
           value={postCode}
           autoComplete="on"
@@ -176,6 +183,8 @@ const Register = () => {
           name="dob"
           type="date"
           label="Date of Birth*"
+          htmlFor="dob"
+          id="dob"
           required
           onChange={handleChange}
           value={dob}
@@ -184,6 +193,8 @@ const Register = () => {
           name="email"
           type="email"
           label="Email*"
+          htmlFor="email"
+          id="email"
           required
           onChange={handleChange}
           value={email}
@@ -193,6 +204,8 @@ const Register = () => {
           name="username"
           type="text"
           label="Username*"
+          htmlFor="username"
+          id="username"
           required
           onChange={handleChange}
           value={username}
@@ -203,6 +216,8 @@ const Register = () => {
             name="password"
             type={showPassword ? "text" : "password"}
             label="Password*"
+            htmlFor="password"
+            id="password"
             required
             onChange={handleChange}
             value={password}
@@ -222,6 +237,8 @@ const Register = () => {
             name="confirmPassword"
             type={showConfirmPassword ? "text" : "password"}
             label="Confirm Password"
+            htmlFor="confirmPassword"
+            id="confirmPassword"
             required
             onChange={handleChange}
             value={confirmPassword}

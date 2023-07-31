@@ -4,7 +4,11 @@ import { Link, Outlet } from "react-router-dom";
 import { UserContext } from "../../context/user.context";
 
 const Navbar = () => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+
+  const signOutHandler = () => {
+    setCurrentUser(null);
+  };
 
   return (
     <div>
@@ -60,23 +64,28 @@ const Navbar = () => {
                     Cast Your Vote
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/Manifesto">
-                    Manifesto
-                  </Link>
-                </li>
               </ul>
               <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    Register
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    Log In
-                  </Link>
-                </li>
+                {currentUser ? (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/" onClick={signOutHandler}>
+                      Sign Out
+                    </Link>
+                  </li>
+                ) : (
+                  <>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/register">
+                        Register
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/login">
+                        Log In
+                      </Link>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

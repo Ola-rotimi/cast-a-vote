@@ -2,7 +2,11 @@
 const FormInput = ({ handleChange, label, ...otherProps }) => {
   return (
     <div className="input-group mb-3">
-      <label className="input-group-text" id="inputGroup-sizing-default">
+      <label
+        {...otherProps}
+        className="input-group-text"
+        id="inputGroup-sizing-default"
+      >
         {label}
       </label>
       <input
