@@ -17,15 +17,16 @@ const defaultFormfields = {
 
 const Register = () => {
   const [formFields, setFormFields] = useState(defaultFormfields);
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
-  const [isRegisterSuccessful, setIsRegisterSuccessful] = useState(false);
-  const [isRegisterFailed, setIsRegisterFailed] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(true); // Passwords match
+  const [isRegisterSuccessful, setIsRegisterSuccessful] = useState(false); // Registration successful
+  const [isRegisterFailed, setIsRegisterFailed] = useState(false); // Registration failed
+  const [isPasswordValid, setIsPasswordValid] = useState(true); // Password is valid
+  const [showPassword, setShowPassword] = useState(false); // Show password
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Show confirm password
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Navigate to login page
 
+  // Destructure formFields
   const {
     firstName,
     lastName,
@@ -37,11 +38,13 @@ const Register = () => {
     confirmPassword,
   } = formFields;
 
+  // Handle change in form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormFields({ ...formFields, [name]: value });
   };
 
+  // Handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     const {
@@ -55,6 +58,7 @@ const Register = () => {
       confirmPassword,
     } = formFields;
 
+    // Password regex
     const passwordRegex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
     if (!passwordRegex.test(password)) {
@@ -63,14 +67,17 @@ const Register = () => {
     } else {
       setIsPasswordValid(true);
     }
+
+    // Date of birth
     const dateOfBirth = new Date(dob).toISOString().split("T")[0];
 
+    // Check if passwords match
     if (password !== confirmPassword) {
       setIsPasswordCorrect(false);
       return;
     } else {
       try {
-        fetch("https://voting-api-rhzm.onrender.com/auth/register", {
+        fetch("https://voting-api-rhzm.onrender.com/auth/register", { // Register endpoint
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -86,29 +93,30 @@ const Register = () => {
             confirmPassword,
           }),
         })
-          .then((res) => {
-            if (res.ok) {
+          .then((res) => { // Check if registration was successful
+            if (res.ok) { // Registration successful
               setIsRegisterSuccessful(true);
               setFormFields(defaultFormfields);
               console.log(res);
               setTimeout(() => {
                 navigate("/login");
               }, 1000);
-            } else {
+            } else { // Registration failed
               setIsRegisterSuccessful(false);
               setIsRegisterFailed(true);
               console.log(res);
             }
           })
-          .catch((errors) => {
+          .catch((errors) => { // Catch errors
             console.error(errors.message);
           });
-      } catch (error) {
+      } catch (error) { // Catch errors
         console.error(error.message);
       }
     }
   };
 
+  // Password validation
   const passwordTest = isPasswordValid ? null : (
     <div className="text-danger">
       <span>
@@ -119,10 +127,12 @@ const Register = () => {
     </div>
   );
 
+  // Show password
   const showPasswordHandler = () => {
     setShowPassword(!showPassword);
   };
 
+  // Show confirm password
   const showConfirmPasswordHandler = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
@@ -131,22 +141,22 @@ const Register = () => {
     <div className="d-grid justify-content-center my-5">
       <h2>I do not have an account</h2>
       <span className="mb-3">Register with your email and password</span>
-      {isPasswordCorrect ? (
-        isRegisterSuccessful ? (
+      {isPasswordCorrect ? ( // Passwords match
+        isRegisterSuccessful ? ( // Registration successful
           <div className="alert alert-success" role="alert">
             Registration Successful, Redirecting to Login Page
           </div>
-        ) : isRegisterFailed ? (
+        ) : isRegisterFailed ? ( // Registration failed
           <div className="alert alert-danger" role="alert">
             Registration Failed, Please try again
           </div>
         ) : null
-      ) : (
+      ) : ( 
         <div className="alert alert-danger" role="alert">
           Passwords do not match
         </div>
       )}
-      <form className="" onSubmit={handleSubmit}>
+      <form className="" onSubmit={handleSubmit}> 
         <FormInput
           name="firstName"
           type="text"
