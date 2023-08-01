@@ -31,8 +31,8 @@ const Carousel = () => {
           <div className="carousel-item active" data-bs-interval="5000">
             <img
               src={Image1}
-              className="d-block w-100"
-              height="500px"
+              className="d-block w-100 carousel-img img-t"
+              height="600px"
               alt="..."
             />
             <div className="carousel-caption d-none d-sm-block">
@@ -45,8 +45,8 @@ const Carousel = () => {
           <div className="carousel-item" data-bs-interval="5000">
             <img
               src={Image2}
-              className="d-block w-100"
-              height="500px"
+              className="d-block w-100 carousel-img img-t"
+              height="600px"
               alt="..."
             />
             <div className="carousel-caption d-none d-sm-block">

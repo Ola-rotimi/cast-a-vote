@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
+import regions from "../../region";
 
 const defaultFormfields = {
   firstName: "",
@@ -63,7 +64,6 @@ const Register = () => {
       setIsPasswordValid(true);
     }
     const dateOfBirth = new Date(dob).toISOString().split("T")[0];
-    console.log(dateOfBirth);
 
     if (password !== confirmPassword) {
       setIsPasswordCorrect(false);
@@ -100,8 +100,8 @@ const Register = () => {
               console.log(res);
             }
           })
-          .catch((error) => {
-            console.error(error.message);
+          .catch((errors) => {
+            console.error(errors.message);
           });
       } catch (error) {
         console.error(error.message);
@@ -138,7 +138,7 @@ const Register = () => {
           </div>
         ) : isRegisterFailed ? (
           <div className="alert alert-danger" role="alert">
-            Registration Failed! Try Again!
+            Registration Failed, Please try again
           </div>
         ) : null
       ) : (
@@ -169,16 +169,29 @@ const Register = () => {
           value={lastName}
           autoComplete="on"
         />
-        <FormInput
-          name="postCode"
-          type="text"
-          label="Post Code"
-          htmlFor="postCode"
-          id="postCode"
-          onChange={handleChange}
-          value={postCode}
-          autoComplete="on"
-        />
+        <div className="input-group mb-3">
+          <label
+            className="input-group-text"
+            htmlFor="inputGroupSelect01"
+            id="inputGroup-sizing-default"
+          >
+            postcode
+          </label>
+          <select
+            className="form-select"
+            id="inputGroupSelect01"
+            onChange={handleChange}
+            name="postCode"
+            value={postCode}
+          >
+            <option defaultValue>Choose...</option>
+            {regions.map((region) => (
+              <option key={region.id} value={region.postcode}>
+                {region.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <FormInput
           name="dob"
           type="date"

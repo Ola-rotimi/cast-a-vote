@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
 
 const Card = ({ candidate }) => {
@@ -17,8 +18,8 @@ const Card = ({ candidate }) => {
           <h5 className="card-title">{name}</h5>
           <p className="card-text">{party}</p>
           <p className="card-text">{brief}</p>
-          <Link to="/manifesto" className="btn btn-primary">
-            Full Manifesto
+          <Link to="/cast-vote" className="btn btn-primary">
+            Vote Here
           </Link>
         </div>
       </div>
