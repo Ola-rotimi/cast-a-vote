@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
 import regions from "../../region";
@@ -45,18 +46,8 @@ const Register = () => {
   };
 
   // Handle submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      firstName,
-      lastName,
-      postCode,
-      dob,
-      email,
-      username,
-      password,
-      confirmPassword,
-    } = formFields;
 
     // Password regex
     const passwordRegex =
@@ -68,50 +59,33 @@ const Register = () => {
       setIsPasswordValid(true);
     }
 
-    // Date of birth
-    const dateOfBirth = new Date(dob).toISOString().split("T")[0];
-
     // Check if passwords match
     if (password !== confirmPassword) {
       setIsPasswordCorrect(false);
       return;
     } else {
+      // Date of birth
+      const dateOfBirth = new Date(dob).toISOString().split("T")[0];
+      const user = {
+        firstName,
+        lastName,
+        postCode,
+        email,
+        username,
+        password,
+        confirmPassword,
+        dateOfBirth,
+      }
+
       try {
-        fetch("https://voting-api-rhzm.onrender.com/auth/register", { // Register endpoint
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            postCode,
-            dateOfBirth,
-            email,
-            username,
-            password,
-            confirmPassword,
-          }),
-        })
-          .then((res) => { // Check if registration was successful
-            if (res.ok) { // Registration successful
-              setIsRegisterSuccessful(true);
-              setFormFields(defaultFormfields);
-              console.log(res);
-              setTimeout(() => {
-                navigate("/login");
-              }, 1000);
-            } else { // Registration failed
-              setIsRegisterSuccessful(false);
-              setIsRegisterFailed(true);
-              console.log(res);
-            }
-          })
-          .catch((errors) => { // Catch errors
-            console.error(errors.message);
-          });
-      } catch (error) { // Catch errors
-        console.error(error.message);
+        await axios.post("https://voting-api-rhzm.onrender.com/auth/register", user)
+        setIsRegisterSuccessful(true);
+        setFormFields(defaultFormfields);
+        navigate('/login');
+      } catch (error) {
+        setIsRegisterSuccessful(false);
+        setIsRegisterFailed(true);
+        console.log(error.response.data.message);
       }
     }
   };
