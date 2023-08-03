@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
 import { UserContext } from "../../context/user.context";
@@ -14,6 +15,7 @@ const Login = () => {
   const [isLogInSuccessful, setIsLogInSuccessful] = useState(false); // Login successful
   const [isLogInFailed, setIsLogInFailed] = useState(false); // Login failed
   const [showPassword, setShowPassword] = useState(false); // Show password
+  const [errorMessage, setErrorMessage] = useState(""); // Error message
 
   const { setCurrentUser } = useContext(UserContext); // Set current user
 
@@ -26,37 +28,30 @@ const Login = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { identifier, password } = formFields;
 
+    const user = { identifier, password };
+
     try {
-      fetch("https://voting-api-rhzm.onrender.com/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ identifier, password }),
-      }).then(async (res) => {
-        const info = await res.json();
-        if (res.ok) {
-          const { data } = info;
-          const { account } = data;
-          setCurrentUser(account);
-          setIsLogInSuccessful(true);
-          setIsLogInFailed(false);
-          setFormFields(defaultFormfields);
-          setTimeout(() => {
-            navigate("/cast-vote");
-          }, 1000);
-        } else {
-          setIsLogInFailed(true);
-          setIsLogInSuccessful(false);
-        }
-      });
+      const response = await axios.post(
+        "https://voting-api-rhzm.onrender.com/auth/login",
+        user
+      );
+      const { data } = response.data;
+      const { account } = data;
+      setCurrentUser(account);
+      setIsLogInSuccessful(true);
+      setIsLogInFailed(false);
+      setFormFields(defaultFormfields);
+      navigate("/cast-vote");
     } catch (error) {
-      return;
+      setIsLogInFailed(true);
+      setIsLogInSuccessful(false);
+      setErrorMessage(error.response.data.message);
+      console.log(error.response.data.message);
     }
   };
 
@@ -80,7 +75,7 @@ const Login = () => {
             </div>
           ) : isLogInFailed ? (
             <div className="alert alert-danger" role="alert">
-              Login Failed
+              Login Failed: {errorMessage}
             </div>
           ) : null}
           <form className="" onSubmit={handleSubmit}>

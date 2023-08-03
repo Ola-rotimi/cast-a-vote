@@ -24,6 +24,7 @@ const Register = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(true); // Password is valid
   const [showPassword, setShowPassword] = useState(false); // Show password
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Show confirm password
+  const [errorMessage, setErrorMessage] = useState(""); // Error message
 
   const navigate = useNavigate(); // Navigate to login page
 
@@ -66,6 +67,7 @@ const Register = () => {
     } else {
       // Date of birth
       const dateOfBirth = new Date(dob).toISOString().split("T")[0];
+
       const user = {
         firstName,
         lastName,
@@ -75,17 +77,20 @@ const Register = () => {
         password,
         confirmPassword,
         dateOfBirth,
-      }
+      };
 
       try {
-        await axios.post("https://voting-api-rhzm.onrender.com/auth/register", user)
+        await axios.post(
+          "https://voting-api-rhzm.onrender.com/auth/register",
+          user
+        );
         setIsRegisterSuccessful(true);
         setFormFields(defaultFormfields);
-        navigate('/login');
+        navigate("/login");
       } catch (error) {
         setIsRegisterSuccessful(false);
         setIsRegisterFailed(true);
-        console.log(error.response.data.message);
+        setErrorMessage(error.response.data.message);
       }
     }
   };
@@ -96,7 +101,6 @@ const Register = () => {
       <span>
         Password must contain at least 8 characters,1 uppercase letter,
       </span>
-
       <p>1 lowercase letter 1 special character and 1 number</p>
     </div>
   );
@@ -122,15 +126,15 @@ const Register = () => {
           </div>
         ) : isRegisterFailed ? ( // Registration failed
           <div className="alert alert-danger" role="alert">
-            Registration Failed, Please try again
+            {errorMessage}
           </div>
         ) : null
-      ) : ( 
+      ) : (
         <div className="alert alert-danger" role="alert">
           Passwords do not match
         </div>
       )}
-      <form className="" onSubmit={handleSubmit}> 
+      <form className="" onSubmit={handleSubmit}>
         <FormInput
           name="firstName"
           type="text"
@@ -221,7 +225,7 @@ const Register = () => {
           />
           <button
             type="button"
-            className="btn btn-sm btn-outline-dark bg-transparent border-0"
+            className="btn btn-sm bg-transparent border-0"
             style={{ height: "40px" }}
             onClick={showPasswordHandler}
           >
@@ -242,7 +246,7 @@ const Register = () => {
           />
           <button
             type="button"
-            className="btn btn-sm btn-outline-dark bg-transparent border-0"
+            className="btn btn-sm bg-transparent border-0"
             style={{ height: "40px" }}
             onClick={showConfirmPasswordHandler}
           >
