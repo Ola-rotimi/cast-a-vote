@@ -10,16 +10,16 @@ const defaultFormfields = {
 };
 
 const Login = () => {
-  const [formFields, setFormFields] = useState(defaultFormfields);
-  const [isLogInSuccessful, setIsLogInSuccessful] = useState(false);
-  const [isLogInFailed, setIsLogInFailed] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [formFields, setFormFields] = useState(defaultFormfields); // Form fields
+  const [isLogInSuccessful, setIsLogInSuccessful] = useState(false); // Login successful
+  const [isLogInFailed, setIsLogInFailed] = useState(false); // Login failed
+  const [showPassword, setShowPassword] = useState(false); // Show password
 
-  const { setCurrentUser } = useContext(UserContext);
+  const { setCurrentUser } = useContext(UserContext); // Set current user
 
   const { identifier, password } = formFields;
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Navigate to vote page
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +48,7 @@ const Login = () => {
           setIsLogInFailed(false);
           setFormFields(defaultFormfields);
           setTimeout(() => {
-            navigate("/dashboard");
+            navigate("/cast-vote");
           }, 1000);
         } else {
           setIsLogInFailed(true);
