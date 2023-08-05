@@ -86,7 +86,9 @@ const Register = () => {
         );
         setIsRegisterSuccessful(true);
         setFormFields(defaultFormfields);
-        navigate("/login");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       } catch (error) {
         setIsRegisterSuccessful(false);
         setIsRegisterFailed(true);
@@ -116,150 +118,164 @@ const Register = () => {
   };
 
   return (
-    <div className="d-grid justify-content-center my-5">
-      <h2>I do not have an account</h2>
-      <span className="mb-3">Register with your email and password</span>
-      {isPasswordCorrect ? ( // Passwords match
-        isRegisterSuccessful ? ( // Registration successful
-          <div className="alert alert-success" role="alert">
-            Registration Successful, Redirecting to Login Page
-          </div>
-        ) : isRegisterFailed ? ( // Registration failed
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}
-          </div>
-        ) : null
-      ) : (
-        <div className="alert alert-danger" role="alert">
-          Passwords do not match
+    <div className="container">
+      <div className="row">
+        <div className="col-md-6 mx-auto">
+          {isRegisterSuccessful ? (
+            <div className="spinner-grow text-secondary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            <div className="d-grid justify-content-center my-5">
+              <h2>I do not have an account</h2>
+              <span className="mb-3">
+                Register with your email and password
+              </span>
+              {isPasswordCorrect ? ( // Passwords match
+                isRegisterSuccessful ? ( // Registration successful
+                  <div className="alert alert-success" role="alert">
+                    Registration Successful, Redirecting to Login Page
+                  </div>
+                ) : isRegisterFailed ? ( // Registration failed
+                  <div className="alert alert-danger" role="alert">
+                    {errorMessage}
+                  </div>
+                ) : null
+              ) : (
+                <div className="alert alert-danger" role="alert">
+                  Passwords do not match
+                </div>
+              )}
+              <form className="" onSubmit={handleSubmit}>
+                <FormInput
+                  name="firstName"
+                  type="text"
+                  label="First Name*"
+                  htmlFor="firstName"
+                  id="firstName"
+                  required
+                  onChange={handleChange}
+                  value={firstName}
+                  autoComplete="on"
+                />
+                <FormInput
+                  name="lastName"
+                  type="text"
+                  label="Last Name*"
+                  htmlFor="lastName"
+                  id="lastName"
+                  required
+                  onChange={handleChange}
+                  value={lastName}
+                  autoComplete="on"
+                />
+                <div className="input-group mb-3">
+                  <label
+                    className="input-group-text"
+                    htmlFor="inputGroupSelect01"
+                    id="inputGroup-sizing-default"
+                  >
+                    postcode
+                  </label>
+                  <select
+                    className="form-select"
+                    id="inputGroupSelect01"
+                    onChange={handleChange}
+                    name="postCode"
+                    value={postCode}
+                  >
+                    <option defaultValue>Choose...</option>
+                    {regions.map((region) => (
+                      <option key={region.id} value={region.postcode}>
+                        {region.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <FormInput
+                  name="dob"
+                  type="date"
+                  label="Date of Birth*"
+                  htmlFor="dob"
+                  id="dob"
+                  required
+                  onChange={handleChange}
+                  value={dob}
+                />
+                <FormInput
+                  name="email"
+                  type="email"
+                  label="Email*"
+                  htmlFor="email"
+                  id="email"
+                  required
+                  onChange={handleChange}
+                  value={email}
+                  autoComplete="on"
+                />
+                <FormInput
+                  name="username"
+                  type="text"
+                  label="Username*"
+                  htmlFor="username"
+                  id="username"
+                  required
+                  onChange={handleChange}
+                  value={username}
+                  autoComplete="on"
+                />
+                <div className="d-flex justify-content-between">
+                  <FormInput
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    label="Password*"
+                    htmlFor="password"
+                    id="password"
+                    required
+                    onChange={handleChange}
+                    value={password}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-sm bg-transparent border-0"
+                    style={{ height: "40px" }}
+                    onClick={showPasswordHandler}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+                {passwordTest}
+                <div className="d-flex justify-content-between">
+                  <FormInput
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    label="Confirm Password"
+                    htmlFor="confirmPassword"
+                    id="confirmPassword"
+                    required
+                    onChange={handleChange}
+                    value={confirmPassword}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-sm bg-transparent border-0"
+                    style={{ height: "40px" }}
+                    onClick={showConfirmPasswordHandler}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+                <button type="submit" className="btn btn-primary ">
+                  Register
+                </button>
+              </form>
+              <span className="my-3">
+                Already have an account? <Link to="/login">Login</Link>
+              </span>
+            </div>
+          )}
         </div>
-      )}
-      <form className="" onSubmit={handleSubmit}>
-        <FormInput
-          name="firstName"
-          type="text"
-          label="First Name*"
-          htmlFor="firstName"
-          id="firstName"
-          required
-          onChange={handleChange}
-          value={firstName}
-          autoComplete="on"
-        />
-        <FormInput
-          name="lastName"
-          type="text"
-          label="Last Name*"
-          htmlFor="lastName"
-          id="lastName"
-          required
-          onChange={handleChange}
-          value={lastName}
-          autoComplete="on"
-        />
-        <div className="input-group mb-3">
-          <label
-            className="input-group-text"
-            htmlFor="inputGroupSelect01"
-            id="inputGroup-sizing-default"
-          >
-            postcode
-          </label>
-          <select
-            className="form-select"
-            id="inputGroupSelect01"
-            onChange={handleChange}
-            name="postCode"
-            value={postCode}
-          >
-            <option defaultValue>Choose...</option>
-            {regions.map((region) => (
-              <option key={region.id} value={region.postcode}>
-                {region.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <FormInput
-          name="dob"
-          type="date"
-          label="Date of Birth*"
-          htmlFor="dob"
-          id="dob"
-          required
-          onChange={handleChange}
-          value={dob}
-        />
-        <FormInput
-          name="email"
-          type="email"
-          label="Email*"
-          htmlFor="email"
-          id="email"
-          required
-          onChange={handleChange}
-          value={email}
-          autoComplete="on"
-        />
-        <FormInput
-          name="username"
-          type="text"
-          label="Username*"
-          htmlFor="username"
-          id="username"
-          required
-          onChange={handleChange}
-          value={username}
-          autoComplete="on"
-        />
-        <div className="d-flex justify-content-between">
-          <FormInput
-            name="password"
-            type={showPassword ? "text" : "password"}
-            label="Password*"
-            htmlFor="password"
-            id="password"
-            required
-            onChange={handleChange}
-            value={password}
-          />
-          <button
-            type="button"
-            className="btn btn-sm bg-transparent border-0"
-            style={{ height: "40px" }}
-            onClick={showPasswordHandler}
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-        {passwordTest}
-        <div className="d-flex justify-content-between">
-          <FormInput
-            name="confirmPassword"
-            type={showConfirmPassword ? "text" : "password"}
-            label="Confirm Password"
-            htmlFor="confirmPassword"
-            id="confirmPassword"
-            required
-            onChange={handleChange}
-            value={confirmPassword}
-          />
-          <button
-            type="button"
-            className="btn btn-sm bg-transparent border-0"
-            style={{ height: "40px" }}
-            onClick={showConfirmPasswordHandler}
-          >
-            {showConfirmPassword ? "Hide" : "Show"}
-          </button>
-        </div>
-        <button type="submit" className="btn btn-primary ">
-          Register
-        </button>
-      </form>
-      <span className="my-3">
-        Already have an account? <Link to="/login">Login</Link>
-      </span>
+      </div>
     </div>
   );
 };

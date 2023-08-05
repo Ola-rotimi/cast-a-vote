@@ -68,7 +68,7 @@ const Navbar = () => {
               <ul className="navbar-nav ms-auto">
                 {currentUser ? (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/" onClick={signOutHandler}>
+                    <Link className="nav-link" to="#" onClick={signOutHandler}>
                       Sign Out
                     </Link>
                   </li>
