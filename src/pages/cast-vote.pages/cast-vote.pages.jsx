@@ -1,4 +1,5 @@
 import { useState, useRef, useContext } from "react";
+// import axios from axios
 
 import Bami from "../../assets/images/Bami.png";
 import Bart from "../../assets/images/Bart.png";
@@ -16,6 +17,7 @@ const CastVote = () => {
   const [selectCandidate, setSelectCandidate] = useState(true); // Select candidate
 
   const { currentUser } = useContext(UserContext);
+  console.log(currentUser);
 
   const topRef = useRef(null); // Top reference
 
@@ -36,6 +38,8 @@ const CastVote = () => {
       setVoted(true); // Set voted to true
       setVotedCandidate(candidate.name); // Set voted candidate
       setSelectCandidate(true); // Set select candidate to true
+      // update users voted candidate on the database
+
     }
   };
 

@@ -43,6 +43,7 @@ const Login = () => {
       const { data } = response.data;
       const { account } = data;
       setCurrentUser(account);
+      console.log(account)
       setIsLogInSuccessful(true);
       setIsLogInFailed(false);
       setFormFields(defaultFormfields);
