@@ -3,6 +3,7 @@ import axios from "axios";
 
 import FormInput from "../../../components/form-inputs.components/form-inputs.components";
 
+
 const pollFormFields = {
   title: "",
   startAt: "",
@@ -22,18 +23,15 @@ const CreatePoll = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(pollForm);
-
     const polls = {
       title: pollForm.title,
       startAt: pollForm.startAt,
       stopAt: pollForm.stopAt,
     };
-
-    console.log(polls);
     try {
       axios.post("https://voting-api-rhzm.onrender.com/polls", polls);
       setIsSuccessful(true);
+      setPollForm(pollFormFields);
     } catch (error) {
       setIsFailed(true);
       setErrorMessage(error.message);

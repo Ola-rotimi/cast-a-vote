@@ -43,12 +43,15 @@ const Login = () => {
       const { data } = response.data;
       const { account } = data;
       setCurrentUser(account);
-      console.log(account)
       setIsLogInSuccessful(true);
       setIsLogInFailed(false);
       setFormFields(defaultFormfields);
       setTimeout(() => {
-        navigate("/cast-vote");
+        if (account.role === "admin") {
+        navigate("/admin");
+        } else {
+          navigate("/cast-vote")
+        }
       }, 1000);
     } catch (error) {
       setIsLogInFailed(true);

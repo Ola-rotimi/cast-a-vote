@@ -8,7 +8,7 @@ const Carousel = () => {
     <div>
       <div
         id="carouselExampleInterval"
-        className="carousel slide"
+        className="carousel slide carousel-fade"
         data-bs-ride="carousel"
       >
         <div className="carousel-indicators">
@@ -28,11 +28,12 @@ const Carousel = () => {
           ></button>
         </div>
         <div className="carousel-inner">
-          <div className="carousel-item active" data-bs-interval="5000">
+          <div className="carousel-item active" data-bs-interval="3000">
             <img
               src={Image1}
-              className="d-block w-100 carousel-img img-t"
+              className="d-block w-100"
               height="600px"
+              width="100%"
               alt="..."
             />
             <div className="carousel-caption d-none d-sm-block">
@@ -42,11 +43,12 @@ const Carousel = () => {
               </button>
             </div>
           </div>
-          <div className="carousel-item" data-bs-interval="5000">
+          <div className="carousel-item" data-bs-interval="3000">
             <img
               src={Image2}
-              className="d-block w-100 carousel-img img-t"
+              className="d-block w-100"
               height="600px"
+              width="100%"
               alt="..."
             />
             <div className="carousel-caption d-none d-sm-block">

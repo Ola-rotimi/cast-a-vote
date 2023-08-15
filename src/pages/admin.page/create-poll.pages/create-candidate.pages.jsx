@@ -20,16 +20,17 @@ const CandidateOption = () => {
   useEffect(() => {
     const fetchPolls = async () => {
       const response = await axios.get(
-        "https://voting-api-rhzm.onrender.com/polls/active"
+        "https://voting-api-rhzm.onrender.com/polls"
       );
       setPolls(response.data);
       setPollId(response.data[0].id);
     };
     fetchPolls();
-    console.log(polls);
-  }, [polls]);
+    
+  }, []);
 
-  
+  console.log(polls);
+  console.log(pollId);
 
   //Handle Option Change
   const handleChange = (e) => {
