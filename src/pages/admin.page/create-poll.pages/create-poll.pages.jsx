@@ -52,7 +52,6 @@ const CreatePoll = () => {
         }
       })
       .catch((error)=>{
-        console.log(error);
         setIsFailed(true);
         setErrorMessage(error.message);
       })

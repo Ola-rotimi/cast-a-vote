@@ -19,7 +19,7 @@ const Admin = () => {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-md-6 mx-auto">
-                    <div className="d-flex justify-content-space-between">
+                    <div className="d-flex justify-content-between">
                       <Link className="navbar-brand" to="/admin/create-poll">
                         Create Poll
                       </Link>

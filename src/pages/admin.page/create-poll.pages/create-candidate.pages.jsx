@@ -6,6 +6,7 @@ import FormInput from "../../../components/form-inputs.components/form-inputs.co
 import { UserContext } from "../../../context/user.context";
 
 const candidateFormFields = {
+  id: Date.now(),
   candidate: "",
   party: "",
 };
@@ -75,6 +76,13 @@ const CandidateOption = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const option = candidateForm.map((candidate) => {
+      return {
+        contestant: candidate.candidate,
+        optionText: candidate.party,
+      };
+    });
+
     try {
       const API_URL = `https://voting-api-rhzm.onrender.com/options/${pollId}`;
       const axiosInstance = axios.create({
@@ -84,13 +92,17 @@ const CandidateOption = () => {
           "Content-Type": "application/json",
         },
       });
-      axiosInstance.post("/option", candidateForm);
-      setIsSuccessful(true);
-      setTimeout(() => {
-        setIsSuccessful(false);
-      }, 3000);
+      axiosInstance.post("/option", { option }).then((response) => {
+        if (response.status === 201) {
+          setIsSuccessful(true);
+          setTimeout(() => {
+            setIsSuccessful(false);
+            window.location.reload();
+          }, 3000);
+          setCandidateForm([candidateFormFields]);
+        }
+      });
     } catch (error) {
-      console.log(error.message);
       setIsFailed(true);
       setErrorMessage(error.message);
     }

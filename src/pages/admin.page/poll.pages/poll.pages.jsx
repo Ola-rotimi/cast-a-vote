@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 
@@ -7,10 +8,12 @@ const Poll = () => {
   const [polls, setPolls] = useState([]);
   const [pollId, setPollId] = useState();
   const [options, setOptions] = useState([]);
-  const [optionsId, setOptionsId] = useState();
   const [isSucceed, setIsSucceed] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const [message, setMessage] = useState("");
+  const [isOptionSucceed, setIsOptionSucceed] = useState(false);
+  const [isOptionFailed, setIsOptionFailed] = useState(false);
+  const [optionMessage, setOptionMessage] = useState("");
 
   const { currentUser } = useContext(UserContext);
   const { userToken } = currentUser;
@@ -32,7 +35,7 @@ const Poll = () => {
         const { data } = response.data;
         setPolls(data);
       } catch (error) {
-        console.log(error.message);
+        setMessage(error.message);
       }
     };
     fetchPolls();
@@ -40,31 +43,36 @@ const Poll = () => {
 
   //Get options
   useEffect(() => {
-    const OPTIONS_API_URL = `https://voting-api-rhzm.onrender.com/options/${pollId}/option`;
-    const axiosInstance = axios.create({
-      baseURL: OPTIONS_API_URL,
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-    const fetchOptions = async () => {
-      try {
-        const response = await axiosInstance.get();
-        const { data } = response.data;
-        console.log(data);
-        setOptions(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchOptions();
-  }, [pollId, userToken]);
+    if (pollId) {
+      setIsOptionFailed(false);
+      setIsOptionSucceed(false);
+      const OPTIONS_API_URL = `https://voting-api-rhzm.onrender.com/options/${pollId}/option`;
+      const axiosInstance = axios.create({
+        baseURL: OPTIONS_API_URL,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const fetchOptions = async () => {
+        try {
+          const response = await axiosInstance.get();
+          const { data } = response.data;
+          setOptions(data);
+        } catch (error) {
+          setIsOptionFailed(true);
+          setOptionMessage(error.response.data.message);
+        }
+      };
+      fetchOptions();
+    }
+  }, [pollId]);
 
   const handleChange = (e) => {
     setPollId(e.target.value);
   };
 
+  //handle Poll Deletion
   const handlePollDelete = async () => {
     const POLL_API_URL = `https://voting-api-rhzm.onrender.com/polls/${pollId}`;
     const axiosInstance = axios.create({
@@ -82,10 +90,35 @@ const Poll = () => {
       setTimeout(() => {
         //page refresh
         window.location.reload();
-      }, 2000);
+      }, 4000);
     } catch (error) {
       setIsFailed(true);
       setMessage(error.message);
+    }
+  };
+
+  //handle Option Deletion
+  const handleOptionDelete = async (e) => {
+    const OPTION_API_URL = `https://voting-api-rhzm.onrender.com/options/${pollId}/option/${e.target.value}`;
+    const axiosInstance = axios.create({
+      baseURL: OPTION_API_URL,
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    try {
+      const response = await axiosInstance.delete();
+      const { data } = response.data;
+      setOptionMessage(data);
+      setIsOptionSucceed(true);
+      setTimeout(() => {
+        //page refresh
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      setIsOptionFailed(true);
+      setOptionMessage(error.message);
     }
   };
 
@@ -96,15 +129,15 @@ const Poll = () => {
           <div className="d-grid my-3">
             <h1 className="text-center">Polls</h1>
             {isSucceed ? (
-              <div className="alert alert-success" role="alert">
+              <div className="alert alert-success my-2" role="alert">
                 {message}
               </div>
             ) : isFailed ? (
-              <div className="alert alert-danger" role="alert">
+              <div className="alert alert-danger my-2" role="alert">
                 {message}
               </div>
             ) : null}
-            <div className="d-flex">
+            <div className="d-flex mb-3">
               <select
                 className="form-select"
                 id="inputGroupSelect01"
@@ -120,44 +153,41 @@ const Poll = () => {
                 ))}
               </select>
               <button
-                className="btn btn-outline-danger"
+                className="btn btn-transparent text-danger btn-sm"
                 type="button"
                 onClick={handlePollDelete}
               >
                 Delete
               </button>
             </div>
-            <div className="d-flex flex-column">
+            <div className="d-flex flex-column mb-3">
+              {isOptionSucceed ? (
+                <div className="alert alert-success" role="alert">
+                  {optionMessage}
+                </div>
+              ) : isOptionFailed ? (
+                <div className="alert alert-danger" role="alert">
+                  {optionMessage}
+                </div>
+              ) : null}
               {options.map((option) => (
-                <div className="form-check" key={option._id}>
-                  <div className="d-flex justify-content-space-between">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="flexRadioDefault"
-                      id="flexRadioDefault1"
-                      value={option._id}
-                      onChange={(e) => setOptionsId(e.target.value)}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexRadioDefault1"
-                    >
-                      {option.contestant}
-                    </label>{" "}
-                    <span className="badge bg-primary rounded-pill">
-                      {option.voteCount}
-                    </span>{" "}
-                    votes{" "}
-                    <button
-                      className="btn btn-outline-danger btn-sm"
-                      type="button"
-                      // onClick={handleOptionDelete}
-                      value={option._id}
-                    >
-                      Delete
-                    </button>
-                  </div>
+                <div
+                  className="d-flex justify-content-between my-2"
+                  key={option._id}
+                >
+                  <h5>{option.contestant}</h5>
+                  <h6>{option.optionText}</h6>
+                  <p>
+                    <strong>{option.voteCount}</strong> votes
+                  </p>
+                  <button
+                    className="btn btn-transparent text-danger btn-sm"
+                    type="button"
+                    onClick={handleOptionDelete}
+                    value={option._id}
+                  >
+                    Delete
+                  </button>
                 </div>
               ))}
             </div>
