@@ -43,9 +43,13 @@ const CreatePoll = () => {
       });
       axiosInstance.post("/",polls)
       .then((response)=>{
-        console.log(response);
+        if (response.status === 201){
         setIsSuccessful(true);
         setPollForm(pollFormFields);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+        }
       })
       .catch((error)=>{
         console.log(error);

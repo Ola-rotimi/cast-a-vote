@@ -13,7 +13,6 @@ const Admin = () => {
         currentUser.userAccount.role === "admin" ? (
           <div className="row">
             <h1 className="text-center">Welcome Admin</h1>
-            <h3 className="text-center">Available Poll</h3>
             <Poll />
             <hr />
             <nav className="navbar ">

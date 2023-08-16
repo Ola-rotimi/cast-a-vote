@@ -6,9 +6,8 @@ import FormInput from "../../../components/form-inputs.components/form-inputs.co
 import { UserContext } from "../../../context/user.context";
 
 const candidateFormFields = {
-  id: Date.now(),
-  contestant: "",
-  optionText: "",
+  candidate: "",
+  party: "",
 };
 
 const CandidateOption = () => {
@@ -37,7 +36,7 @@ const CandidateOption = () => {
         const { data } = response.data;
         setPolls(data);
       } catch (error) {
-        console.log(error.message);
+        setErrorMessage(error.message);
       }
     };
     fetchPolls();
@@ -60,9 +59,8 @@ const CandidateOption = () => {
     setCandidateForm([
       ...candidateForm,
       {
-        id: Date.now(),
-        contestant: "",
-        optionText: "",
+        candidate: "",
+        party: "",
       },
     ]);
   };
@@ -135,29 +133,29 @@ const CandidateOption = () => {
                 <div key={index}>
                   <hr />
                   <FormInput
-                    name="contestant"
-                    label="Contestant"
+                    name="candidate"
+                    label="Candidate"
                     type="text"
-                    htmlFor="contestant"
-                    id="contestant"
+                    htmlFor="candidate"
+                    id="candidate"
                     required
                     onChange={(e) =>
-                      handleCandidateChange(index, "contestant", e.target.value)
+                      handleCandidateChange(index, "candidate", e.target.value)
                     }
-                    value={candidateForm.contestant}
+                    value={candidateForm.candidate}
                     autoComplete="on"
                   />
                   <FormInput
-                    name="optionText"
+                    name="party"
                     label="Party"
                     type="text"
                     htmlFor="party"
                     id="party"
                     required
                     onChange={(e) =>
-                      handleCandidateChange(index, "optionText", e.target.value)
+                      handleCandidateChange(index, "party", e.target.value)
                     }
-                    value={candidateForm.optionText}
+                    value={candidateForm.party}
                     autoComplete="on"
                   />
                   <button

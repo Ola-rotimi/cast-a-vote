@@ -3,7 +3,7 @@ const Loading = () => {
     <div className="container-fluid">
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "100vh" }}
+        style={{ minHeight: "80vh" }}
       >
         <div className="spinner-grow text-secondary" role="status">
           <span className="visually-hidden">Loading...</span>
