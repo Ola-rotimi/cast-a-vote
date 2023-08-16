@@ -8,9 +8,9 @@ const Admin = () => {
   const { currentUser } = useContext(UserContext);
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid my-3">
       {currentUser ? (
-        currentUser.role === "admin" ? (
+        currentUser.userAccount.role === "admin" ? (
           <div className="row">
             <h1 className="text-center">Welcome Admin</h1>
             <h3 className="text-center">Available Poll</h3>
@@ -34,7 +34,13 @@ const Admin = () => {
             </nav>
             <Outlet />
           </div>
-        ) : null
+        ) : (
+          <div className="row">
+            <h3 className="text-center my-4">
+              You seem to be lost <Link to="/">Go Home</Link>
+            </h3>
+          </div>
+        )
       ) : (
         <div className="row">
           <h3 className="text-center my-4">

@@ -4,10 +4,10 @@ import { Link, Outlet } from "react-router-dom";
 import { UserContext } from "../../context/user.context";
 
 const Navbar = () => {
-  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { currentUser, updateUser } = useContext(UserContext);
 
   const signOutHandler = () => {
-    setCurrentUser(null);
+    updateUser(null);
   };
 
   return (

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 
 import FormInput from "../../../components/form-inputs.components/form-inputs.components";
+import { UserContext } from "../../../context/user.context";
 
 
 const pollFormFields = {
@@ -16,6 +17,9 @@ const CreatePoll = () => {
   const [isFailed, setIsFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const { currentUser } = useContext(UserContext);
+  const { userToken } = currentUser;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPollForm({ ...pollForm, [name]: value });
@@ -29,9 +33,25 @@ const CreatePoll = () => {
       stopAt: pollForm.stopAt,
     };
     try {
-      axios.post("https://voting-api-rhzm.onrender.com/polls", polls);
-      setIsSuccessful(true);
-      setPollForm(pollFormFields);
+      const API_URL = "https://voting-api-rhzm.onrender.com/polls"
+      const axiosInstance = axios.create({
+        baseURL: API_URL,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        }
+      });
+      axiosInstance.post("/",polls)
+      .then((response)=>{
+        console.log(response);
+        setIsSuccessful(true);
+        setPollForm(pollFormFields);
+      })
+      .catch((error)=>{
+        console.log(error);
+        setIsFailed(true);
+        setErrorMessage(error.message);
+      })
     } catch (error) {
       setIsFailed(true);
       setErrorMessage(error.message);

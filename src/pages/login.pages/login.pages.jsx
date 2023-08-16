@@ -4,6 +4,7 @@ import axios from "axios";
 
 import FormInput from "../../components/form-inputs.components/form-inputs.components";
 import { UserContext } from "../../context/user.context";
+import Loading from "../../components/loading.component/loading.components";
 
 const defaultFormfields = {
   identifier: "",
@@ -17,7 +18,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false); // Show password
   const [errorMessage, setErrorMessage] = useState(""); // Error message
 
-  const { setCurrentUser } = useContext(UserContext); // Set current user
+  const { updateUser } = useContext(UserContext); // Set current user
 
   const { identifier, password } = formFields;
 
@@ -41,16 +42,20 @@ const Login = () => {
         user
       );
       const { data } = response.data;
-      const { account } = data;
-      setCurrentUser(account);
+      const { account, token } = data;
+      const userDetail = {
+        userToken: token,
+        userAccount: account,
+      };
+      updateUser(userDetail);
       setIsLogInSuccessful(true);
       setIsLogInFailed(false);
       setFormFields(defaultFormfields);
       setTimeout(() => {
         if (account.role === "admin") {
-        navigate("/admin");
+          navigate("/admin");
         } else {
-          navigate("/cast-vote")
+          navigate("/cast-vote");
         }
       }, 1000);
     } catch (error) {
@@ -70,9 +75,7 @@ const Login = () => {
         <div className="col-md-6 mx-auto">
           <div className="d-grid justify-content-center my-5">
             {isLogInSuccessful ? (
-              <div className="spinner-grow text-secondary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
+              <Loading />
             ) : (
               <>
                 <h2>I already have an account</h2>

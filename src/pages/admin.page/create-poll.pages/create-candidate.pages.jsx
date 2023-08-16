@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 
 import FormInput from "../../../components/form-inputs.components/form-inputs.components";
+import { UserContext } from "../../../context/user.context";
 
 const candidateFormFields = {
   id: Date.now(),
   contestant: "",
-  party: "",
+  optionText: "",
 };
 
 const CandidateOption = () => {
@@ -14,23 +16,32 @@ const CandidateOption = () => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [polls, setPolls] = useState();
+  const [polls, setPolls] = useState([]);
   const [pollId, setPollId] = useState();
 
+  const { currentUser } = useContext(UserContext);
+  const { userToken } = currentUser;
+
   useEffect(() => {
+    const API_URL = "https://voting-api-rhzm.onrender.com/polls";
+    const axiosInstance = axios.create({
+      baseURL: API_URL,
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+    });
     const fetchPolls = async () => {
-      const response = await axios.get(
-        "https://voting-api-rhzm.onrender.com/polls"
-      );
-      setPolls(response.data);
-      setPollId(response.data[0].id);
+      try {
+        const response = await axiosInstance.get();
+        const { data } = response.data;
+        setPolls(data);
+      } catch (error) {
+        console.log(error.message);
+      }
     };
     fetchPolls();
-    
   }, []);
-
-  console.log(polls);
-  console.log(pollId);
 
   //Handle Option Change
   const handleChange = (e) => {
@@ -51,7 +62,7 @@ const CandidateOption = () => {
       {
         id: Date.now(),
         contestant: "",
-        party: "",
+        optionText: "",
       },
     ]);
   };
@@ -63,22 +74,23 @@ const CandidateOption = () => {
     setCandidateForm(newCandidate);
   };
 
-  const handleSubmit = () => {
-    const candidates = candidateForm.map((candidate) => {
-      return {
-        option: {
-          contestant: candidate.contestant,
-          optionText: candidate.party,
-        },
-      };
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
     try {
-      axios.post(
-        `https://voting-api-rhzm.onrender.com/polls/${pollId}`,
-        candidates
-      );
+      const API_URL = `https://voting-api-rhzm.onrender.com/options/${pollId}`;
+      const axiosInstance = axios.create({
+        baseURL: API_URL,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      axiosInstance.post("/option", candidateForm);
       setIsSuccessful(true);
+      setTimeout(() => {
+        setIsSuccessful(false);
+      }, 3000);
     } catch (error) {
       console.log(error.message);
       setIsFailed(true);
@@ -113,11 +125,11 @@ const CandidateOption = () => {
                 value={pollId}
               >
                 <option defaultValue>Choose...</option>
-                {/* {polls.map((poll) => (
-                  <option key={poll.id} value={poll.id}>
+                {polls.map((poll) => (
+                  <option key={poll.createdAt} value={poll._id}>
                     {poll.title}
                   </option>
-                ))} */}
+                ))}
               </select>
               {candidateForm.map((candidateForm, index) => (
                 <div key={index}>
@@ -136,16 +148,16 @@ const CandidateOption = () => {
                     autoComplete="on"
                   />
                   <FormInput
-                    name="party"
+                    name="optionText"
                     label="Party"
                     type="text"
                     htmlFor="party"
                     id="party"
                     required
                     onChange={(e) =>
-                      handleCandidateChange(index, "party", e.target.value)
+                      handleCandidateChange(index, "optionText", e.target.value)
                     }
-                    value={candidateForm.party}
+                    value={candidateForm.optionText}
                     autoComplete="on"
                   />
                   <button

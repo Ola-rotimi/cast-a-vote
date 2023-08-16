@@ -17,7 +17,6 @@ const CastVote = () => {
   const [selectCandidate, setSelectCandidate] = useState(true); // Select candidate
 
   const { currentUser } = useContext(UserContext);
-  console.log(currentUser);
 
   const topRef = useRef(null); // Top reference
 
@@ -39,7 +38,6 @@ const CastVote = () => {
       setVotedCandidate(candidate.name); // Set voted candidate
       setSelectCandidate(true); // Set select candidate to true
       // update users voted candidate on the database
-
     }
   };
 
