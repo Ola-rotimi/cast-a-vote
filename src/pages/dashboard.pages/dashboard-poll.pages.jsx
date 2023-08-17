@@ -30,7 +30,7 @@ const DashboardPoll = () => {
         const { data } = response.data;
         setPolls(data);
       } catch (error) {
-        setIsFailed(true);
+        setIsFailed(true)
         setMessage(error.message);
       }
     };
@@ -54,7 +54,6 @@ const DashboardPoll = () => {
           const { data } = response.data;
           setOptions(data);
         } catch (error) {
-          setIsFailed(true);
           setMessage(error.response.data.message);
         }
       };
@@ -69,7 +68,7 @@ const DashboardPoll = () => {
   };
 
   return (
-    <div className="m-5">
+    <div className="m-1">
       <h1 className="text-center">Poll result</h1>
 
       <hr />
@@ -78,7 +77,7 @@ const DashboardPoll = () => {
           {message}
         </div>
       ) : null}
-      <div className="m-5">
+      <div className="m-1">
         <select
           className="form-select mb-4 w-2"
           id="inputGroupSelect01"
@@ -94,9 +93,10 @@ const DashboardPoll = () => {
           ))}
         </select>
 
-        <div className="m-5">
+        <div className="d-grid">
           {options.map((option) => (
-            <div key={option._id} className="d-flex my-3">
+            <div key={option._id} className="my-3">
+              <h5>{option.contestant}</h5>
               <div
                 key={option._id}
                 className="progress mx-3 flex-fill "
