@@ -97,7 +97,6 @@ const DashboardPoll = () => {
         <div className="m-5">
           {options.map((option) => (
             <div key={option._id} className="d-flex my-3">
-              <h5>{option.contestant}</h5>
               <div
                 key={option._id}
                 className="progress mx-3 flex-fill "
@@ -129,7 +128,6 @@ const DashboardPoll = () => {
                   </strong>
                 </div>
               </div>
-              <p>{option.voteCount}</p>
             </div>
           ))}
         </div>
