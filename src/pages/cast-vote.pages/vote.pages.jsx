@@ -95,7 +95,6 @@ const Vote = () => {
         const fetchOptions = async () => {
           try {
             const response = await axiosInstance.patch();
-            console.log(response.status);
             if (response.status === 200) {
               setVoted(true); // Set voted to true // Set voted candidate
               setSelectCandidate(true); // Set select candidate to true
@@ -104,19 +103,25 @@ const Vote = () => {
                 setMessage("");
               }, 3000);
             } else {
+              setVoted(false);
+              setIsFailed(true);
               setMessage("You have already voted");
               setTimeout(() => {
                 setVoted(false);
-                setSelectCandidate(false);
+                setIsFailed(false);
+                setSelectCandidate(true);
               }, 3000);
             }
           } catch (error) {
-            if (error.response.status === 406) {
-              setIsFailed(true);
-              setMessage("You have voted once in this poll");
-            } else {
-              setMessage("Error voting, Please select Poll and Candidate");
-            }
+            setVoted(false);
+            setIsFailed(true);
+            setMessage(error.response.data.message);
+            setTimeout(() => {
+              setVoted(false);
+              setIsFailed(false);
+              setSelectCandidate(true);
+              setMessage("");
+            }, 3000);
           }
         };
         fetchOptions();
@@ -141,10 +146,7 @@ const Vote = () => {
         <h3 className="text-center">Candidates</h3>
         <hr />
         <p className="text-center">Select a Candidate</p>
-        <div
-          className="d-grid justify-content-center align-item-center"
-          style={{ minWidth: "50%" }}
-        >
+        <div className="m-5">
           {voted ? (
             <div className="alert alert-success" role="alert">
               {message}
@@ -157,7 +159,7 @@ const Vote = () => {
             ""
           ) : (
             <div className="alert alert-danger" role="alert">
-              Please select a candidate
+              Please Select a Poll and a Candidate
             </div>
           )}
 
@@ -176,10 +178,10 @@ const Vote = () => {
             ))}
           </select>
 
-          <div className="d-grid justify-content-center align-items-center my-3">
+          <div className="m-3">
             {options
               ? options.map((option) => (
-                  <div style={{ minHeight: "50%" }} key={option._id}>
+                  <div key={option._id}>
                     <input
                       className="form-check-input mx-2 mb-3"
                       type="radio"
