@@ -35,7 +35,7 @@ const Navbar = () => {
           >
             <div className="offcanvas-header">
               <h5
-                className="offcanvas-title text-light"
+                className="offcanvas-title"
                 id="offcanvasNavbarLabel"
               >
                 Menu
