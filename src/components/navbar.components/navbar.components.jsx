@@ -28,7 +28,7 @@ const Navbar = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
-            className="offcanvas offcanvas-end bg-dark"
+            className="offcanvas offcanvas-end bg-dark text-light"
             tabIndex="-1"
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
@@ -42,7 +42,7 @@ const Navbar = () => {
               </h5>
               <button
                 type="button"
-                className="btn-close bg-light"
+                className="btn-close"
                 data-bs-dismiss="offcanvas"
                 aria-label="Close"
               ></button>
