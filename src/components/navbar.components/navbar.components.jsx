@@ -42,7 +42,7 @@ const Navbar = () => {
               </h5>
               <button
                 type="button"
-                className="btn-close text-light"
+                className="btn-close"
                 data-bs-dismiss="offcanvas"
                 aria-label="Close"
               ></button>
