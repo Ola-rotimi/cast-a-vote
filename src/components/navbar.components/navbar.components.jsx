@@ -35,14 +35,14 @@ const Navbar = () => {
           >
             <div className="offcanvas-header">
               <h5
-                className="offcanvas-title bg-light"
+                className="offcanvas-title"
                 id="offcanvasNavbarLabel"
               >
                 Menu
               </h5>
               <button
                 type="button"
-                className="btn-close text-light"
+                className="btn-close bg-light"
                 data-bs-dismiss="offcanvas"
                 aria-label="Close"
               ></button>
