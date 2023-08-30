@@ -28,14 +28,14 @@ const Navbar = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div
-            className="offcanvas offcanvas-end bg-dark"
+            className="offcanvas offcanvas-end bg-dark text-light"
             tabIndex="-1"
             id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel"
           >
             <div className="offcanvas-header">
               <h5
-                className="offcanvas-title text-light"
+                className="offcanvas-title"
                 id="offcanvasNavbarLabel"
               >
                 Menu
